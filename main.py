@@ -1,57 +1,29 @@
-from venv import create
-from PIL import Image, ExifTags, ImageFont, ImageDraw
-from os import walk, path, makedirs
-from datetime import datetime
 from sys import exit
-from shutil import make_archive
 
+from controllers.fileHandler import FileHandlerController
 from models.image import ImageModel
 
-# dir create func
-
-def create_dir(dir_path):
-    if not path.exists(dir_path):
-        makedirs(dir_path)
-
-metadataDtField = "DateTimeOriginal"
-
-imgDir = "images/"
-inpDir = path.join(imgDir, "input/")
-outDir = path.join(imgDir, "output/")
-
-curDt = datetime.now()
-curDtStr = curDt.strftime("%Y-%m-%d %H-%M-%S")
-outDtDir = path.join(outDir, curDtStr)
-
-# add dirs to script dirs to create if not present
-
-scriptDirs = [
-    imgDir,
-    inpDir,
-    outDir
-]
-
-# create output dir with current datetime
-
-for dir in scriptDirs:
-    create_dir(dir)
+fh = FileHandlerController()
 
 # get all image files in /input dir
 
-filenames = next(walk(inpDir), (None, None, []))[2]  # [] if no file
+inpDir = fh.get_dir_path("inp")
+fileNames = fh.get_dir_filenames(inpDir)
 
 # parse input images metadata
 
-numImgs = len(filenames)
+numImgs = len(fileNames)
 
 if numImgs < 1:
     print("no images in input dir")
     exit("stopping script\n")
 
-create_dir(outDtDir)
+fh.set_dt_out_dir()
+dtOutDir = fh.get_dir_path("dtOut")
+fh.create_dir(dtOutDir)
 
 filecnt = 0
-for filename in filenames:
+for filename in fileNames:
 
     print("parsing file " + str(filecnt) + " of " + str(numImgs))
 
@@ -65,8 +37,8 @@ for filename in filenames:
     imgModel.parse_image()
     imgModel.parse_font_size()
     imgModel.draw_txt()
-    imgModel.save_image(outDtDir)
+    imgModel.save_image(dtOutDir)
 
     filecnt = filecnt + 1
 
-make_archive(outDtDir, "zip", outDtDir)
+fh.create_archive(dtOutDir)
