@@ -49,6 +49,8 @@ class FileHandlerController:
             print("dir [" + dir_path + "] already exists, skip create")
 
     def create_archive(self, dir_path):
+        print("creating archive for dir [" + dir_path + "]")
+        
         make_archive(dir_path, "zip", dir_path)
 
     def check_inp_files(self, fileNames):

@@ -1,9 +1,17 @@
 from sys import exit
 
+from controllers.threadController import ThreadController
 from controllers.fileHandler import FileHandlerController
+from models.timer import TimerModel
 from models.image import ImageModel
 
+scriptTimer = TimerModel("main script")
+scriptTimer.start()
+
+print("starting script...")
+
 fh = FileHandlerController()
+tc = ThreadController()
 
 inpDir = fh.get_dir_path("inp")
 dtOutDir = fh.get_dir_path("dtOut")
@@ -26,13 +34,16 @@ for fileName in fileNames:
         filecnt = filecnt + 1
         continue
 
-    imgModel = ImageModel(filecnt, fileName)
-    imgModel.read_image(inpDir)
-    imgModel.parse_image()
-    imgModel.parse_font_size()
-    imgModel.draw_txt()
-    imgModel.save_image(dtOutDir)
+    imgModel = ImageModel(filecnt, fileName, inpDir, dtOutDir)
+    tc.add_thread((imgModel, ))
 
     filecnt = filecnt + 1
 
+tc.start_threads()
+
 fh.create_archive(dtOutDir)
+
+print("stopping script...")
+
+scriptTimer.stop()
+scriptTimer.duration()
