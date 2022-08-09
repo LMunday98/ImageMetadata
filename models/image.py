@@ -26,8 +26,7 @@ class ImageModel:
         self.outDir = _outDir
 
     def start(self):
-        imgIndexTxt = str(self.imgIndex)
-        print("starting image thread for index [" + imgIndexTxt + "]")
+        self.print_process("starting thread")
         
         self.read_image()
         self.parse_image()
@@ -36,8 +35,7 @@ class ImageModel:
         self.save_image()
 
     def read_image(self):
-        imgIndexTxt = str(self.imgIndex)
-        print("reading image for index [" + imgIndexTxt + "]")
+        self.print_process("reading image")
 
         inpDir = self.inpDir
         fileName = self.fileName
@@ -48,8 +46,7 @@ class ImageModel:
         return True
 
     def parse_image(self):
-        imgIndexTxt = str(self.imgIndex)
-        print("parsing image for index [" + imgIndexTxt + "]")
+        self.print_process("parsing image")
 
         img = self.imgObj
         dtField = self.dtField
@@ -69,8 +66,7 @@ class ImageModel:
         return True
 
     def parse_font_size(self):
-        imgIndexTxt = str(self.imgIndex)
-        print("parsing font size for index [" + imgIndexTxt + "]")
+        self.print_process("parsing font size")
 
         imgSize = self.imgObj.size
         imgFraction = self.imgFraction
@@ -81,6 +77,7 @@ class ImageModel:
 
         font = ImageFont.truetype(fontStyle, fontSize)
         while font.getsize(imgTxt)[0] < imgFraction * imgSize[0]:
+            # self.print_process("parsing font size, \ttrying font size [" + str(fontSize) + "]")
             # iterate until the text size is just larger than the criteria
             fontSize += 1
             font = ImageFont.truetype(fontStyle, fontSize)
@@ -89,11 +86,12 @@ class ImageModel:
         fontSize -= 1
         font = ImageFont.truetype(fontStyle, fontSize)
 
+        self.print_process("parsing font size \tfinal font size [" + str(fontSize) + "]")
+
         self.font = font
 
     def draw_txt(self):
-        imgIndexTxt = str(self.imgIndex)
-        print("drawing image text for index [" + imgIndexTxt + "]")
+        self.print_process("drawing image text")
 
         img = self.imgObj
         imgTxt = self.imgTxt
@@ -108,10 +106,8 @@ class ImageModel:
             font=font
         )
 
-
     def save_image(self):
-        imgIndexTxt = str(self.imgIndex)
-        print("saving image for index [" + imgIndexTxt + "]")
+        self.print_process("saving image")
 
         outDir = self.outDir
         fileName = self.fileName
@@ -121,3 +117,7 @@ class ImageModel:
         img.save(outImagePath)
 
         return True
+
+    def print_process(self, currentProcess):
+        imgIndexStr = str(self.imgIndex)
+        print("image index [" + imgIndexStr + "] \t" + currentProcess)

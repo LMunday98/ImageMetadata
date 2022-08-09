@@ -41,6 +41,8 @@ for fileName in fileNames:
 
 tc.start_threads()
 
+print("finished threads")
+
 fh.create_archive(dtOutDir)
 
 print("stopping script...")
