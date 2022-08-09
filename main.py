@@ -3,6 +3,7 @@ from PIL import Image, ExifTags, ImageFont, ImageDraw
 from os import walk, path, makedirs
 from datetime import datetime
 from sys import exit
+from shutil import make_archive
 
 # dir create func
 
@@ -104,3 +105,5 @@ for filename in filenames:
     # print(outImagePath)
 
     filecnt = filecnt + 1
+
+make_archive(outDtDir, "zip", outDtDir)
