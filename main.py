@@ -5,6 +5,8 @@ from datetime import datetime
 from sys import exit
 from shutil import make_archive
 
+from models.image import ImageModel
+
 # dir create func
 
 def create_dir(dir_path):
@@ -55,54 +57,15 @@ for filename in filenames:
 
     if not filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
         print("file is not an image\n")
+        filecnt = filecnt + 1
         continue
 
-    inpImagePath = path.join(inpDir, filename)
-    outImagePath = path.join(outDtDir, filename)
-    
-    img = Image.open(inpImagePath)
-
-    imgWidth, imgHeight = img.size
-
-    exif = { ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS }
-
-    if metadataDtField not in exif:
-        print("dtField [" + metadataDtField + "] does not exist in image exif\n")
-        print(exif)
-        exit("stopping script\n")
-
-    mDatetime = exif[metadataDtField]
-    # print(mDatetime)
-    imgtxt = mDatetime.replace(":", "-")
-
-    draw = ImageDraw.Draw(img)
-
-    fontsize = 1  # starting font size
-    fonttype = "Keyboard.ttf"
-
-    # portion of image width you want text width to be
-    img_fraction = 0.50
-
-    font = ImageFont.truetype(fonttype, fontsize)
-    while font.getsize(imgtxt)[0] < img_fraction * img.size[0]:
-        # iterate until the text size is just larger than the criteria
-        fontsize += 1
-        font = ImageFont.truetype(fonttype, fontsize)
-
-    # optionally de-increment to be sure it is less than criteria
-    fontsize -= 1
-    font = ImageFont.truetype(fonttype, fontsize)
-
-    # draw.text((x, y),"Sample Text",(r,g,b))
-    draw.text(
-        (0, 0),
-        imgtxt,
-        (235, 232, 52), # yellow
-        font=font
-    )
-
-    img.save(outImagePath)
-    # print(outImagePath)
+    imgModel = ImageModel(filecnt, filename)
+    imgModel.read_image(inpDir)
+    imgModel.parse_image()
+    imgModel.parse_font_size()
+    imgModel.draw_txt()
+    imgModel.save_image(outDtDir)
 
     filecnt = filecnt + 1
 
