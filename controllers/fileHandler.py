@@ -27,13 +27,7 @@ class FileHandlerController:
         for dir in dirs_to_create:
             self.create_dir(dir)
 
-    def check_create_dt_out_dir(self, fileNames):
-        numFiles = len(fileNames)
-
-        if numFiles < 1:
-            return False
-
-        return True
+        self.set_dt_out_dir()
 
     def set_dt_out_dir(self):
         outDir = self.dirs["out"]
@@ -56,6 +50,14 @@ class FileHandlerController:
 
     def create_archive(self, dir_path):
         make_archive(dir_path, "zip", dir_path)
+
+    def check_inp_files(self, fileNames):
+        numFiles = len(fileNames)
+
+        if numFiles < 1:
+            return False
+
+        return True
 
     def get_dir_filenames(self, dir):
         return next(walk(dir), (None, None, []))[2]  # [] if no file

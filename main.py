@@ -5,17 +5,15 @@ from models.image import ImageModel
 
 fh = FileHandlerController()
 
-# get all image files in /input dir
-
 inpDir = fh.get_dir_path("inp")
+dtOutDir = fh.get_dir_path("dtOut")
+
 fileNames = fh.get_dir_filenames(inpDir)
 
-if not fh.check_create_dt_out_dir(fileNames):
+if not fh.check_inp_files(fileNames):
     print("no images in input dir")
     exit("stopping script\n")
 
-fh.set_dt_out_dir()
-dtOutDir = fh.get_dir_path("dtOut")
 fh.create_dir(dtOutDir)
 
 filecnt = 0
