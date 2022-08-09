@@ -8,7 +8,7 @@ This project parses image files and adds the timestamp from the metadata onto th
 
 1. Clone to repo locally.
 
-2. Run the `make run` command and create the inital dirs.
+2. Run the `make run` command and create the initial image dirs.
 
 3. Insert images into the `/images/input/` dir.
 
