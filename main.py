@@ -39,13 +39,22 @@ filenames = next(walk(inpDir), (None, None, []))[2]  # [] if no file
 
 # parse input images metadata
 
-if len(filenames) < 1:
+numImgs = len(filenames)
+
+if numImgs < 1:
     print("no images in input dir")
     exit("stopping script\n")
 
 create_dir(outDtDir)
 
+filecnt = 0
 for filename in filenames:
+
+    print("parsing file " + str(filecnt) + " of " + str(numImgs))
+
+    if not filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+        print("file is not an image\n")
+        continue
 
     inpImagePath = path.join(inpDir, filename)
     outImagePath = path.join(outDtDir, filename)
@@ -62,7 +71,7 @@ for filename in filenames:
         exit("stopping script\n")
 
     mDatetime = exif[metadataDtField]
-    print(mDatetime)
+    # print(mDatetime)
     imgtxt = mDatetime.replace(":", "-")
 
     draw = ImageDraw.Draw(img)
@@ -93,3 +102,5 @@ for filename in filenames:
 
     img.save(outImagePath)
     # print(outImagePath)
+
+    filecnt = filecnt + 1
