@@ -21,10 +21,12 @@ class TimerModel:
         print("stopping timer [" + self.timerName + "], dt [" + dtDir["dtNowStr"] + "]")
 
     def duration(self):
-        difference = self.dtStart - self.dtStop
+        difference = self.dtStop - self.dtStart
         duration_in_s = difference.total_seconds()
         self.dtDuration = duration_in_s
-        print("timer duration [" + duration_in_s + " (s)]")
+
+        duration_fmt = round(duration_in_s, 2)
+        print("timer duration [" + str(duration_fmt) + " (s)]")
 
     def get_current_dt(self):
         dtNow = datetime.now()
