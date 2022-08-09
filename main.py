@@ -10,11 +10,7 @@ fh = FileHandlerController()
 inpDir = fh.get_dir_path("inp")
 fileNames = fh.get_dir_filenames(inpDir)
 
-# parse input images metadata
-
-numImgs = len(fileNames)
-
-if numImgs < 1:
+if not fh.check_create_dt_out_dir(fileNames):
     print("no images in input dir")
     exit("stopping script\n")
 
@@ -23,16 +19,16 @@ dtOutDir = fh.get_dir_path("dtOut")
 fh.create_dir(dtOutDir)
 
 filecnt = 0
-for filename in fileNames:
+for fileName in fileNames:
 
-    print("parsing file " + str(filecnt) + " of " + str(numImgs))
+    print("parsing file " + str(filecnt))
 
-    if not filename.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
+    if not fh.file_is_image(fileName):
         print("file is not an image\n")
         filecnt = filecnt + 1
         continue
 
-    imgModel = ImageModel(filecnt, filename)
+    imgModel = ImageModel(filecnt, fileName)
     imgModel.read_image(inpDir)
     imgModel.parse_image()
     imgModel.parse_font_size()

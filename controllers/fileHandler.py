@@ -11,6 +11,15 @@ class FileHandlerController:
         "dtOut": "",
     }
 
+    allowedImgFormats = (
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".tiff",
+        ".bmp",
+        ".gif"
+    )
+
     def __init__(self):
         dirs = self.dirs
 
@@ -18,19 +27,26 @@ class FileHandlerController:
         for dir in dirs_to_create:
             self.create_dir(dir)
 
+    def check_create_dt_out_dir(self, fileNames):
+        numFiles = len(fileNames)
+
+        if numFiles < 1:
+            return False
+
+        return True
+
     def set_dt_out_dir(self):
-        dirs = self.dirs
-        outDir = dirs["out"]
+        outDir = self.dirs["out"]
 
         curDt = datetime.now()
         curDtStr = curDt.strftime("%Y-%m-%d %H-%M-%S")
         outDtDir = path.join(outDir, curDtStr)
 
-        dirs["dtOut"] = outDtDir
+        self.dirs["dtOut"] = outDtDir
 
 
     def create_dir(self, dir_path):
-        print("\ncheck dir[" + dir_path + "]")
+        print("\ncheck dir [" + dir_path + "]")
 
         if not path.exists(dir_path):
             print("dir [" + dir_path + "] does not exist, create")
@@ -46,3 +62,8 @@ class FileHandlerController:
 
     def get_dir_path(self, dir):
         return self.dirs[dir]
+
+    def file_is_image(self, fileName):
+        imgFmts = self.allowedImgFormats
+
+        return fileName.lower().endswith(imgFmts)
